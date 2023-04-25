@@ -1,0 +1,68 @@
+.app {
+  height: 100vh;
+  padding: 8px 0 0;
+
+  &__wrapper {
+    height: 100%;
+    // padding: 0 16px;
+    width: 75vw;
+    margin: 0 auto;
+  }
+
+  &__form {
+    display: flex;
+    gap: 16px;
+  }
+
+  &__input {
+    width: 100%;
+  }
+
+  &__repo-info {
+    margin-top: 8px;
+    display: flex;
+  }
+
+  &__repo-details {
+    margin-top: 16px;
+    height: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  &__repo-section {
+    height: 100%;
+    flex: 1;
+
+    &-title {
+      text-align: center;
+    }
+
+    &-content {
+      margin-top: 24px;
+      height: 100%;
+      padding: 16px;
+
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      background-color: lightgray;
+      border: 1px solid black;
+    }
+  }
+
+  &__repo-item {
+    padding: 16px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    border: 1px solid black;
+    border-radius: 24px;
+    background-color: #fff;
+  }
+}
