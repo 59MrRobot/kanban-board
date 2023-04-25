@@ -1,5 +1,7 @@
 import React from 'react';
 import './App.scss';
+import { IssueItem } from './components/IssueItem';
+import { IssuesList } from './components/IssuesList';
 
 const App: React.FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -11,17 +13,30 @@ const App: React.FC = () => {
       <div className="app__wrapper">
         <form className="app__form" onSubmit={handleSubmit}>
           <input
-            type="text" 
+            type="text"
             placeholder="Enter repo URL"
             className="app__input"
           />
 
-          <input type="submit" value="Load issues" />
+          <input
+            type="submit"
+            value="Load issues"
+            className="app__button"
+          />
         </form>
 
         <div className="app__repo-info">
-          <p>{'Facebook > React'}</p>
-          <p>194K stars</p>
+          <p className="app__repo-info-name">{'Facebook > React'}</p>
+
+          <p className="app__repo-info-stars">
+            <img
+              src={`${process.env.PUBLIC_URL}/star.png`}
+              className="app__repo-info-image"
+              alt="star"
+            />
+
+            <span>194 K stars</span>
+          </p>
         </div>
 
         <div className="app__repo-details">
@@ -29,29 +44,11 @@ const App: React.FC = () => {
             <h2 className="app__repo-section-title">ToDo</h2>
 
             <div className="app__repo-section-content">
-              <div className="app__repo-item">
-                <p>Some issue title</p>
+              <IssueItem />
 
-                <p>#315 opened 3 days ago</p>
+              <IssueItem />
 
-                <p>Admin | Comments: 3</p>
-              </div>
-
-              <div className="app__repo-item">
-                <p>Some issue title</p>
-
-                <p>#315 opened 3 days ago</p>
-
-                <p>Admin | Comments: 3</p>
-              </div>
-
-              <div className="app__repo-item">
-                <p>Some issue title</p>
-
-                <p>#315 opened 3 days ago</p>
-
-                <p>Admin | Comments: 3</p>
-              </div>
+              <IssueItem />
             </div>
           </div>
 
@@ -59,37 +56,11 @@ const App: React.FC = () => {
             <h2 className="app__repo-section-title">In Progress</h2>
 
             <div className="app__repo-section-content">
-              <div className="app__repo-item">
-                <p>Some issue title</p>
-
-                <p>#315 opened 3 days ago</p>
-
-                <p>Admin | Comments: 3</p>
-              </div>
+              <IssueItem />
             </div>
           </div>
 
-          <div className="app__repo-section">
-            <h2 className="app__repo-section-title">Done</h2>
-
-            <div className="app__repo-section-content">
-              <div className="app__repo-item">
-                <p>Some issue title</p>
-
-                <p>#315 opened 3 days ago</p>
-
-                <p>Admin | Comments: 3</p>
-              </div>
-
-              <div className="app__repo-item">
-                <p>Some issue title</p>
-
-                <p>#315 opened 3 days ago</p>
-
-                <p>Admin | Comments: 3</p>
-              </div>
-            </div>
-          </div>
+          <IssuesList title="Done" />
         </div>
 
       </div>

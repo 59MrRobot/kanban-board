@@ -1,0 +1,22 @@
+.issues-list {
+  height: 100%;
+  flex: 1;
+
+  &__title {
+    font-weight: 400;
+    text-align: center;
+  }
+
+  &__content {
+    margin-top: 24px;
+    height: 100%;
+    padding: 16px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    background-color: lightgray;
+    border: 1px solid black;
+  }
+}
