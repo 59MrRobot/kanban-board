@@ -1,15 +1,23 @@
 import React from 'react';
 import './IssueItem.scss';
+import { format } from 'timeago.js';
 
-export const IssueItem: React.FC = React.memo(
-  () => {
+interface Props {
+  issue: Issue;
+}
+
+export const IssueItem: React.FC<Props> = React.memo(
+  ({ issue }) => {
+
     return (
       <div className="issue-item">
-        <p className="issue-item__title">Some issue title</p>
+        <p className="issue-item__title">{issue.title}</p>
 
-        <p className="issue-item__date">#315 opened 3 days ago</p>
+        <p className="issue-item__date">
+          #{issue.number} opened {format(issue.created_at, 'en_US')}
+        </p>
 
-        <p className="issue-item__info">Admin | Comments: 3</p>
+        <p className="issue-item__info">{issue.user.type} | Comments: {issue.comments}</p>
       </div>
     )
   }
