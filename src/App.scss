@@ -1,35 +1,4 @@
 .app {
-  height: 100vh;
-  padding: 8px 0 8px;
-
-  &__wrapper {
-    height: 100%;
-    // padding: 0 16px;
-    width: 75vw;
-    margin: 0 auto;
-  }
-
-  &__form {
-    display: flex;
-    gap: 16px;
-  }
-
-  &__input {
-    width: 100%;
-    padding: 4px 16px;
-    outline: none;
-
-    font-weight: 600;
-  }
-
-  &__button {
-    padding: 4px 16px;
-    border: 1px solid #000;
-    background-color: transparent;
-
-    font-weight: 600;
-  }
-
   &__repo-info {
     margin-top: 8px;
     display: flex;
@@ -51,38 +20,6 @@
     &-image {
       width: 24px;
       height: 24px;
-    }
-  }
-
-  &__repo-details {
-    margin-top: 16px;
-    height: 100%;
-
-    display: flex;
-    justify-content: space-between;
-    gap: 32px;
-  }
-
-  &__repo-section {
-    height: 100%;
-    flex: 1;
-
-    &-title {
-      font-weight: 400;
-      text-align: center;
-    }
-
-    &-content {
-      margin-top: 24px;
-      height: 100%;
-      padding: 16px;
-
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-
-      background-color: lightgray;
-      border: 1px solid black;
     }
   }
 }

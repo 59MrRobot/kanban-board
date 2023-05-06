@@ -21,6 +21,11 @@ const repoSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
+    resetRepo: (state) => {
+      state.repo = null;
+      state.isFetching = false;
+      state.error = false;
+    },
   }
 });
 
@@ -28,5 +33,6 @@ export const {
   startRepoProcess,
   getRepoSuccess,
   getRepoFailure,
+  resetRepo,
 } = repoSlice.actions;
 export default repoSlice.reducer;

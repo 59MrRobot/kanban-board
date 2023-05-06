@@ -23,13 +23,13 @@ export const getRepo = async (dispatch, owner, repo) => {
   }
 }
 
-export const getIssues = async (dispatch, owner, repo) => {
+export const getIssues = async (dispatch, owner, repo, url) => {
   dispatch(startProcess());
 
   try {
     const response = await octokit.request(`GET /repos/${owner}/${repo}/issues`, config(owner, repo));
 
-    dispatch(getIssuesSuccess(response.data));
+    dispatch(getIssuesSuccess({ issues: response.data, url }));
   } catch (error) {
     dispatch(getIssuesFailure());
     console.log(error);

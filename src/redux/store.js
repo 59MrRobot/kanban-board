@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import issueReducer from './issueRedux';
 import repoReducer from './repoRedux';
+import historyReducer from './historyRedux';
 import {
   persistStore,
   persistReducer,
@@ -22,6 +23,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   issue: issueReducer,
   repo: repoReducer,
+  history: historyReducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

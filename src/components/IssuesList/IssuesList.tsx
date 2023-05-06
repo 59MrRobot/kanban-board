@@ -1,41 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { Box, Typography } from '@mui/material';
+import React from 'react';
 import { IssueItem } from '../IssueItem';
-import './IssuesList.scss';
+import { Droppable } from 'react-beautiful-dnd';
 
 interface Props {
-  title: string;
+  column: Column;
 }
 
 export const IssuesList: React.FC<Props> = React.memo(
-  ({ title }) => {
-    const issues: Issue[] = useSelector((state: any) => state.issue.issues);
-    const [issuesList, setIssuesList] = useState<Issue[]>([]);
-
-    useEffect(() => {
-      if (title === 'ToDo') {
-        setIssuesList(issues)
-      }
-
-      if (title === 'In Progress') {
-        setIssuesList(issues.filter(issue => issue.state === 'open' && issue.assignee))
-      }
-
-      if (title === 'Done') {
-        setIssuesList(issues.filter(issue => issue.state === 'closed'))
-      }
-    }, [issues, title]);
+  ({ column }) => {
 
     return (
-      <div className="issues-list">
-        <h2 className="issues-list__title">{title}</h2>
+      <Box sx={{ width: "100%" }}>
+        <Typography
+          variant='h2'
+          sx={{
+            fontFamily: "'Source Code Pro', monospace",
+            fontWeight: 400,
+            fontSize: "32px",
+            textAlign: "center",
+          }}
+        >
+          {column.id}
+        </Typography>
 
-        <div className="issues-list__content">
-          {issuesList.map(issue => (
-            <IssueItem key={issue.id} issue={issue} />
-          ))}
-        </div>
-      </div>
+        <Droppable droppableId={column.id}>
+          {provided => (
+            <Box
+              sx={{
+                marginTop: "24px",
+                padding: "16px",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+                backgroundColor: "lightgray",
+              }}
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {column.list.map((issue, index) => (
+                <IssueItem key={issue.id} issue={issue} index={index} />
+              ))}
+              {provided.placeholder}
+            </Box>
+          )}
+        </Droppable>
+      </Box>
     )
   }
 );

@@ -1,16 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import './App.scss';
-import { IssueItem } from './components/IssueItem';
 import { IssuesList } from './components/IssuesList';
 import { getIssues, getRepo } from './redux/apiCalls';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  Button,
+  Container,
+  Stack,
+  TextField
+} from '@mui/material';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { resetHistory, updateCurrentIssue, updateHistory } from './redux/historyRedux';
+import ClearIcon from '@mui/icons-material/Clear';
+import { resetRepo } from './redux/repoRedux';
+import { resetIssue } from './redux/issueRedux';
 
 const App: React.FC = () => {
   const [url, setUrl] = useState("");
   const [owner, setOwner] = useState("");
   const [repo, setRepo] = useState("");
   const dispatch = useDispatch();
-  const repository: Repo = useSelector((state: any) => state.repo.repo);
+  const repository: Repo = useSelector((state: State) => state.repo.repo);
+  const issue: Issue = useSelector((state: State) => state.issue.issue);
+  const history: any = useSelector((state: State) => state.history.history);
+  const currentIssue: Issue = useSelector((state: State) => state.history.currentIssue);
 
   useEffect(() => {
     if (url) {
@@ -19,12 +32,57 @@ const App: React.FC = () => {
     }
   }, [url]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const handleClick = () => {
     getRepo(dispatch, owner, repo);
-    getIssues(dispatch, owner, repo);
+    getIssues(dispatch, owner, repo, url);
   };
+
+  useEffect(() => {
+    if (issue && !history.hasOwnProperty(issue.url)) {
+      const todo = issue.issues.filter(issue => issue.state !== 'closed' && !issue.assignee);
+
+      const inProgress = issue.issues.filter(issue => issue.state === 'open' && issue.assignee);
+
+      const done = issue.issues.filter(issue => issue.state === 'closed');
+
+      const columns = {
+        todo: {
+          id: 'todo',
+          list: todo
+        },
+        inProgress: {
+          id: 'inProgress',
+          list: inProgress
+        },
+        done: {
+          id: 'done',
+          list: done
+        }
+      }
+
+      dispatch(updateHistory({
+        ...history,
+        [issue.url]: {
+          columns: columns,
+          issues: issue.issues
+        },
+      }));
+
+      dispatch(updateCurrentIssue({
+        url: issue.url,
+        issues: issue.issues,
+        columns: columns
+      }));
+    }
+
+    if (issue && history.hasOwnProperty(issue.url)) {
+      dispatch(updateCurrentIssue({
+        columns: history[issue.url].columns,
+        issues: history[issue.url].issues,
+        url: issue.url,
+      }));
+    }
+  }, [dispatch, history, issue]);
 
   const roundStars = (stars: number) => {
     if (stars > 1000) {
@@ -34,52 +92,181 @@ const App: React.FC = () => {
     }
   }
 
+  const onDragEnd = ({ source, destination }: DropResult) => {
+    if (destination === undefined || destination === null) return null;
+
+    if (
+      source.droppableId === destination.droppableId &&
+      destination.index === source.index
+    ) return null;
+
+    const start: Column = currentIssue.columns[source.droppableId as keyof Columns];
+    const end: Column = currentIssue.columns[destination.droppableId as keyof Columns];
+
+    if (start === end) {
+      const newList = start.list.filter((_: any, idx: number) => idx !== source.index)
+
+      newList.splice(destination.index, 0, start.list[source.index]);
+
+      const newCol = {
+        id: start.id,
+        list: newList
+      }
+
+      dispatch(updateHistory({
+        ...history,
+        [currentIssue.url]: {
+          issues: currentIssue.issues,
+          columns : {
+            ...currentIssue.columns,
+            [newCol.id]: newCol,
+          }
+        },
+      }))
+
+      return null;
+    } else {
+      const newStartList = start.list.filter(
+        (_: any, idx: number) => idx !== source.index
+      )
+
+      const newStartCol = {
+        id: start.id,
+        list: newStartList
+      };
+
+      const newEndList = [...end.list];
+
+      newEndList.splice(destination.index, 0, start.list[source.index]);
+
+      const newEndCol = {
+        id: end.id,
+        list: newEndList
+      }
+
+      dispatch(updateHistory({
+        ...history,
+        [currentIssue.url]: {
+          issues: currentIssue.issues,
+          columns : {
+            ...currentIssue.columns,
+            [newStartCol.id]: newStartCol,
+            [newEndCol.id]: newEndCol
+          }
+        },
+      }))
+
+      return null;
+    }
+  }
+
   return (
-    <div className="app">
-      <div className="app__wrapper">
-        <form className="app__form" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Enter repo URL"
-            className="app__input"
-            onChange={(event) => setUrl(event.target.value)}
-          />
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Container
+        maxWidth="xl"
+        disableGutters
+        sx={{
+          padding: "8px 0 8px",
+          minHeight: "100vh",
+        }}
+      >
+        <Container
+          maxWidth="xl"
+          sx={{
+            height: "100%",
+          }}
+        >
 
-          <input
-            type="submit"
-            value="Load issues"
-            className="app__button"
-          />
-        </form>
+          <Container
+            maxWidth="xl"
+            disableGutters
+            sx={{
+              display: "flex",
+              gap: "16px",
+            }}
+          >
+            <TextField
+              id="outlined-controlled"
+              label="Enter repo URL"
+              variant="outlined"
+              sx={{ width: "100%" }}
+              onChange={(event) => setUrl(event.target.value)}
+            />
 
-        {repository && (
-          <div className="app__repo-info">
-            <p className="app__repo-info-name">
-              {`${repository.owner.login} > ${repository.name}`}
-            </p>
+            <Button
+              variant="outlined"
+              sx={{ whiteSpace: "nowrap" }}
+              onClick={() => handleClick()}
+            >
+              Load issue
+            </Button>
 
-            <p className="app__repo-info-stars">
-              <img
-                src={`${process.env.PUBLIC_URL}/star.png`}
-                className="app__repo-info-image"
-                alt="star"
-              />
+            <ClearIcon onClick={() => {
+              dispatch(resetIssue());
+              dispatch(resetRepo());
+              dispatch(resetHistory());
+            }} />
+          </Container>
 
-              <span>{roundStars(repository.stargazers_count)} stars</span>
-            </p>
-          </div>
-        )}
+          {repository && (
+            <Container
+              maxWidth="xl"
+              disableGutters
+              sx={{
+                marginTop: "8px",
+                display: "flex",
+                alignItems: "center",
+                gap: "32px",
+              }}
+            >
+              <p className="app__repo-info-name">
+                <a
+                  href="https://github.com/facebook"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ textDecoration: "none", color: "inherit"}}
+                >
+                  {repository.owner.login}
+                </a>
+                {` > `}
+                <a
+                  href="https://github.com/facebook/react"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ textDecoration: "none", color: "inherit"}}
+                >
+                  {repository.name}
+                </a>
+              </p>
 
-        <div className="app__repo-details">
-          <IssuesList title="ToDo" />
+              <p className="app__repo-info-stars">
+                <img
+                  src={`${process.env.PUBLIC_URL}/star.png`}
+                  className="app__repo-info-image"
+                  alt="star"
+                />
 
-          <IssuesList title="In Progress" />
+                <span>{roundStars(repository.stargazers_count)} stars</span>
+              </p>
+            </Container>
+          )}
 
-          <IssuesList title="Done" />
-        </div>
-
-      </div>
-    </div>
+          {currentIssue?.issues.length > 0 && (
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              spacing={2}
+              maxWidth="xl"
+              sx={{ marginTop: "16px" }}
+            >
+              {Object.values(currentIssue?.columns).map(column => (
+                <IssuesList column={column} key={column.id} />
+              ))}
+            </Stack>
+          )}
+        </Container>
+      </Container>
+    </DragDropContext>
   );
 }
 
