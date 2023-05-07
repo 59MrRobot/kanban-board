@@ -23,7 +23,7 @@ jobs:
         REACT_APP_TOKEN: ${{ secrets.REACT_APP_TOKEN }}
 
     - name: Deploy
-      uses: 59MrRobot/github-pages-deploy-action@releases/v3
+      uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
