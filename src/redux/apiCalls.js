@@ -6,10 +6,9 @@ import {
   getIssuesFailure
 } from "./issueRedux";
 import { getRepoFailure, getRepoSuccess, startRepoProcess } from './repoRedux';
-import env from "react-dotenv";
 
 const octokit = new Octokit({
-  auth: `${env.REACT_APP_TOKEN}`,
+  auth: `${process.env.REACT_APP_TOKEN}`,
 })
 
 export const getRepo = async (dispatch, owner, repo) => {
