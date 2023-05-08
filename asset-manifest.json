@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.css": "./static/css/main.eb7053d7.css",
-    "main.js": "./static/js/main.bfe1f5bf.js",
-    "index.html": "./index.html"
+    "main.css": "/kanban-board/static/css/main.eb7053d7.css",
+    "main.js": "/kanban-board/static/js/main.c1a4b725.js",
+    "index.html": "/kanban-board/index.html"
   },
   "entrypoints": [
     "static/css/main.eb7053d7.css",
-    "static/js/main.bfe1f5bf.js"
+    "static/js/main.c1a4b725.js"
   ]
 }
