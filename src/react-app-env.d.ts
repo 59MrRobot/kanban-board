@@ -55,9 +55,8 @@ interface IssueItem {
   } | null;
   comments: number;
   created_at: string;
-  destination: string;
   number: number;
-  state?: string;
+  state: string;
   title: string;
   user: {
     type: string;

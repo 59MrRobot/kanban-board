@@ -21,7 +21,7 @@ export const IssuesList: React.FC<Props> = React.memo(
             textAlign: "center",
           }}
         >
-          {column.id}
+          {column.id === 'todo' ? 'ToDo' : column.id === 'inProgress' ? 'In Progress' : 'Done'}
         </Typography>
 
         <Droppable droppableId={column.id}>
