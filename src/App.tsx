@@ -10,10 +10,7 @@ import {
   TextField
 } from '@mui/material';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import { resetHistory, updateCurrentIssue, updateHistory } from './redux/historyRedux';
-import ClearIcon from '@mui/icons-material/Clear';
-import { resetRepo } from './redux/repoRedux';
-import { resetIssue } from './redux/issueRedux';
+import { updateCurrentIssue, updateHistory } from './redux/historyRedux';
 
 const App: React.FC = () => {
   const [url, setUrl] = useState("");
@@ -200,12 +197,6 @@ const App: React.FC = () => {
             >
               Load issue
             </Button>
-
-            <ClearIcon onClick={() => {
-              dispatch(resetIssue());
-              dispatch(resetRepo());
-              dispatch(resetHistory());
-            }} />
           </Container>
 
           {repository && (
