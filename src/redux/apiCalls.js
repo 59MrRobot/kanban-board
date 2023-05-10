@@ -7,9 +7,7 @@ import {
 } from "./issueRedux";
 import { getRepoFailure, getRepoSuccess, startRepoProcess } from './repoRedux';
 
-const octokit = new Octokit({
-  auth: `${process.env.REACT_APP_TOKEN}`,
-})
+const octokit = new Octokit({ })
 
 export const getRepo = async (dispatch, owner, repo) => {
   dispatch(startRepoProcess());
