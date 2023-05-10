@@ -1,5 +1,6 @@
 {
   "name": "react-template",
+  "homepage": "https://59mrrobot.github.io/kanban-board/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
